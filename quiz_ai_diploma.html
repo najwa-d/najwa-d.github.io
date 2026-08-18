@@ -757,20 +757,46 @@ const letters = ["أ","ب","ج","د"];
 let current = 0;
 let answers = []; // {selected, correct, isCorrect}
 let locked = false;
+let workingQuestions = [];
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledQuestions(){
+  return questions.map(q => {
+    const indexed = q.options.map((opt, i) => ({opt, i}));
+    const shuffled = shuffleArray(indexed);
+    const newCorrect = shuffled.findIndex(o => o.i === q.correct);
+    return {
+      chapter: q.chapter,
+      q: q.q,
+      explain: q.explain,
+      options: shuffled.map(o => o.opt),
+      correct: newCorrect
+    };
+  });
+}
 
 function startQuiz(){
   document.getElementById('screen-intro').classList.add('hidden');
   document.getElementById('screen-question').classList.remove('hidden');
   current = 0;
   answers = [];
+  workingQuestions = buildShuffledQuestions();
   renderQuestion();
 }
 
 function renderQuestion(){
   locked = false;
-  const item = questions[current];
+  const item = workingQuestions[current];
   document.getElementById('qIndex').textContent = current+1;
-  document.getElementById('progressFill').style.width = ((current)/questions.length*100)+'%';
+  document.getElementById('progressFill').style.width = ((current)/workingQuestions.length*100)+'%';
   document.getElementById('qChapter').textContent = item.chapter;
   document.getElementById('qText').textContent = item.q;
   document.getElementById('qExplain').classList.remove('show');
@@ -787,17 +813,18 @@ function renderQuestion(){
     optsWrap.appendChild(div);
   });
 
-  document.getElementById('nextBtn').textContent = (current === questions.length-1) ? 'عرض النتيجة ←' : 'السؤال التالي ←';
+  document.getElementById('nextBtn').textContent = (current === workingQuestions.length-1) ? 'عرض النتيجة ←' : 'السؤال التالي ←';
 }
 
 function selectOption(idx){
   if(locked) return;
   locked = true;
-  const item = questions[current];
+  const item = workingQuestions[current];
   const isCorrect = idx === item.correct;
   answers.push({selected: idx, correct: item.correct, isCorrect, chapter: item.chapter});
 
   const opts = document.querySelectorAll('#qOptions .option');
+
   opts.forEach((el, i) => {
     el.classList.add('locked');
     if(i === item.correct) el.classList.add('correct');
@@ -813,7 +840,7 @@ function selectOption(idx){
 }
 
 function nextQuestion(){
-  if(current < questions.length - 1){
+  if(current < workingQuestions.length - 1){
     current++;
     renderQuestion();
   } else {
@@ -827,7 +854,7 @@ function showResult(){
 
   const correctCount = answers.filter(a => a.isCorrect).length;
   const wrongCount = answers.length - correctCount;
-  const pct = Math.round((correctCount/questions.length)*100);
+  const pct = Math.round((correctCount/workingQuestions.length)*100);
 
   // ring animation
   const circumference = 2 * Math.PI * 78;
@@ -841,7 +868,7 @@ function showResult(){
   });
 
   document.getElementById('ringScore').textContent = pct + '%';
-  document.getElementById('ringTotal').textContent = correctCount + ' من ' + questions.length;
+  document.getElementById('ringTotal').textContent = correctCount + ' من ' + workingQuestions.length;
   document.getElementById('correctCount').textContent = correctCount;
   document.getElementById('wrongCount').textContent = wrongCount;
 
@@ -904,7 +931,7 @@ function restartQuiz(){
 function reviewAnswers(){
   // scroll to chapter breakdown as a lightweight review anchor
   let reviewHtml = '<div style="text-align:right; margin-top:10px;">';
-  questions.forEach((item, i) => {
+  workingQuestions.forEach((item, i) => {
     const a = answers[i];
     reviewHtml += `<div style="margin-bottom:14px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
       <div style="font-weight:800; color:#fff; margin-bottom:6px; font-size:14.5px;">${i+1}. ${item.q}</div>
