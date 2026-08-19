@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار البرمجيات والأدوات | دبلوم الذكاء الاصطناعي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #0b1b33;
+    --navy-2: #0f2440;
+    --navy-3: #142c4d;
+    --gold: #c9a227;
+    --gold-light: #e8d28a;
+    --cream: #f4efe2;
+    --ink: #eef1f6;
+    --muted: #9aa7bd;
+    --good: #35a97a;
+    --bad: #d1495b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1100px 550px at 15% -10%, rgba(201,162,39,.14), transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, rgba(201,162,39,.08), transparent 55%),
+      linear-gradient(180deg, var(--navy) 0%, #08152b 100%);
+    color: var(--ink);
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 28px 16px;
+  }
+  .app{
+    width:100%;
+    max-width: 720px;
+  }
+  .brandline{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:18px;
+    color: var(--gold-light);
+    letter-spacing:.5px;
+    font-weight:700;
+    font-size:14px;
+    opacity:.85;
+  }
+  .brandline .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);}
+
+  .card{
+    background: linear-gradient(180deg, var(--navy-3), var(--navy-2));
+    border: 1px solid rgba(201,162,39,.18);
+    border-radius: 22px;
+    padding: 36px 32px;
+    box-shadow: 0 30px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+    position:relative;
+    overflow:hidden;
+  }
+  .card::before{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(120deg, transparent 40%, rgba(201,162,39,.05) 50%, transparent 60%);
+    pointer-events:none;
+  }
+
+  /* ---------- Intro ---------- */
+  #screen-intro h1{
+    font-size: 30px;
+    font-weight:900;
+    margin: 6px 0 4px;
+    color: #fff;
+    line-height:1.35;
+  }
+  #screen-intro .sub{
+    color: var(--gold-light);
+    font-weight:700;
+    font-size:17px;
+    margin-bottom: 22px;
+  }
+  #screen-intro p.desc{
+    color: var(--muted);
+    line-height:1.9;
+    font-size:15.5px;
+    margin-bottom: 24px;
+  }
+  .meta-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-bottom:28px;
+  }
+  .meta-pill{
+    background: rgba(201,162,39,.08);
+    border:1px solid rgba(201,162,39,.3);
+    color: var(--gold-light);
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+  .btn{
+    appearance:none;
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:800;
+    font-size:16px;
+    border-radius: 14px;
+    padding: 16px 20px;
+    width:100%;
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .btn-primary{
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    color: #1a1204;
+    box-shadow: 0 12px 28px rgba(201,162,39,.25);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); filter:brightness(1.03); }
+  .btn-primary:active{ transform: translateY(0); }
+  .btn-ghost{
+    background: transparent;
+    color: var(--gold-light);
+    border: 1px solid rgba(201,162,39,.35);
+  }
+  .btn-ghost:hover{ background: rgba(201,162,39,.08); }
+
+  /* ---------- Progress ---------- */
+  .progress-wrap{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom: 26px;
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    border-radius:999px;
+    background: rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    border-radius:999px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    width:0%;
+    transition: width .4s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-count{
+    font-weight:800;
+    font-size:14px;
+    color: var(--gold-light);
+    white-space:nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Question ---------- */
+  .tag{
+    display:inline-block;
+    background: rgba(201,162,39,.12);
+    color: var(--gold-light);
+    font-size: 12.5px;
+    font-weight:800;
+    padding: 5px 13px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(201,162,39,.25);
+  }
+  .qtext{
+    font-size: 21px;
+    font-weight:800;
+    color:#fff;
+    line-height:1.6;
+    margin-bottom: 22px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+    margin-bottom: 8px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background: rgba(255,255,255,.03);
+    border: 1.5px solid rgba(255,255,255,.09);
+    border-radius: 14px;
+    padding: 15px 16px;
+    cursor:pointer;
+    text-align:right;
+    font-family:inherit;
+    color: var(--ink);
+    font-size: 15.5px;
+    font-weight:600;
+    transition: all .15s ease;
+  }
+  .option:hover:not(.locked){
+    border-color: rgba(201,162,39,.5);
+    background: rgba(201,162,39,.06);
+    transform: translateX(-2px);
+  }
+  .option .letter{
+    flex:0 0 auto;
+    width:30px;height:30px;
+    border-radius:9px;
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;
+    font-size:14px;
+    color: var(--gold-light);
+  }
+  .option.correct{
+    border-color: var(--good);
+    background: rgba(53,169,122,.14);
+  }
+  .option.correct .letter{
+    background: var(--good);
+    color:#062016;
+    border-color: var(--good);
+  }
+  .option.incorrect{
+    border-color: var(--bad);
+    background: rgba(209,73,91,.14);
+  }
+  .option.incorrect .letter{
+    background: var(--bad);
+    color:#2a0509;
+    border-color: var(--bad);
+  }
+  .option.locked{ cursor:default; }
+  .option.dim{ opacity:.45; }
+
+  .explain{
+    margin-top:16px;
+    padding:15px 16px;
+    border-radius:14px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.08);
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height:1.85;
+    display:none;
+  }
+  .explain.show{ display:block; animation: fadeIn .25s ease; }
+  .explain b{ color: var(--gold-light); }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  .nextrow{ margin-top:22px; display:none; }
+  .nextrow.show{ display:block; }
+
+  /* ---------- Result ---------- */
+  #screen-result{ text-align:center; }
+  .ring-wrap{
+    position:relative;
+    width:180px; height:180px;
+    margin: 4px auto 22px;
+  }
+  .ring-wrap svg{ transform: rotate(-90deg); }
+  .ring-bg{ fill:none; stroke: rgba(255,255,255,.08); stroke-width:12; }
+  .ring-fg{ fill:none; stroke: url(#gradGold); stroke-width:12; stroke-linecap:round; transition: stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1); }
+  .ring-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .ring-score{ font-size:38px; font-weight:900; color:#fff; }
+  .ring-total{ font-size:13px; color: var(--muted); font-weight:700; margin-top:2px; }
+
+  .level-badge{
+    display:inline-block;
+    padding: 9px 22px;
+    border-radius: 999px;
+    font-weight:800;
+    font-size:15px;
+    margin-bottom: 14px;
+  }
+  .level-excellent{ background: rgba(53,169,122,.15); color:#5fd8a6; border:1px solid rgba(53,169,122,.4); }
+  .level-good{ background: rgba(201,162,39,.15); color: var(--gold-light); border:1px solid rgba(201,162,39,.4); }
+  .level-fair{ background: rgba(224,158,52,.15); color:#e8b25a; border:1px solid rgba(224,158,52,.4); }
+  .level-weak{ background: rgba(209,73,91,.15); color:#e88b96; border:1px solid rgba(209,73,91,.4); }
+
+  #screen-result h2{ font-size:24px; font-weight:900; color:#fff; margin: 6px 0 10px; }
+  #screen-result p.msg{ color: var(--muted); font-size:15px; line-height:1.9; margin-bottom:26px; }
+
+  .stat-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    margin-bottom: 26px;
+  }
+  .stat-box{
+    background: rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    padding: 16px 10px;
+  }
+  .stat-box .n{ font-size:24px; font-weight:900; }
+  .stat-box .l{ font-size:12.5px; color:var(--muted); font-weight:700; margin-top:4px; }
+  .stat-box.ok .n{ color: var(--good); }
+  .stat-box.no .n{ color: var(--bad); }
+
+  .chapter-breakdown{
+    text-align:right;
+    margin-bottom: 26px;
+  }
+  .chapter-breakdown h3{
+    font-size:14px; color: var(--gold-light); font-weight:800; margin-bottom:12px;
+  }
+  .ch-row{
+    display:flex; align-items:center; gap:10px;
+    font-size:13.5px; color:var(--muted);
+    margin-bottom:9px;
+  }
+  .ch-row .ch-name{ flex:0 0 160px; color: var(--ink); font-weight:600; }
+  .ch-bar-track{ flex:1; height:6px; border-radius:999px; background:rgba(255,255,255,.07); overflow:hidden; }
+  .ch-bar-fill{ height:100%; border-radius:999px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+  .ch-frac{ flex:0 0 auto; font-weight:800; color:var(--ink); font-size:12.5px; }
+
+  .actions{ display:flex; flex-direction:column; gap:11px; }
+
+  .footer-note{
+    text-align:center;
+    color: rgba(154,167,189,.6);
+    font-size: 12.5px;
+    margin-top: 18px;
+    font-weight:600;
+  }
+
+  @media (max-width:480px){
+    .card{ padding: 26px 18px; border-radius:18px; }
+    #screen-intro h1{ font-size:24px; }
+    .qtext{ font-size:18.5px; }
+    .stat-grid{ grid-template-columns:1fr 1fr; }
+    .ch-row .ch-name{ flex-basis:110px; font-size:12.5px; }
+  }
+
+  .hidden{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="brandline">اختبار البرمجيات والأدوات</div>
+
+  <div class="card">
+
+    <!-- INTRO -->
+    <div id="screen-intro">
+      <h1>اختبار البرمجيات والأدوات</h1>
+      <div class="sub">دبلوم الذكاء الاصطناعي</div>
+      <p class="desc">
+        40 سؤالًا متخصصة في البرامج والمكتبات البرمجية (بايثون، NumPy، Pandas، TensorFlow، PyTorch،
+        Keras، OpenCV، ROS، Arduino) — منسوخة حرفيًا من "أسئلة المقرر" في الملخص. كل سؤال بدرجة 2.5،
+        والدرجة الكلية 100.
+      </p>
+      <div class="meta-row">
+        <div class="meta-pill">40 سؤالًا</div>
+        <div class="meta-pill">2.5 درجة لكل سؤال</div>
+        <div class="meta-pill">من 100 درجة</div>
+        <div class="meta-pill">⏱ ~16 دقيقة</div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()">ابدئي الاختبار</button>
+    </div>
+
+    <!-- QUESTION -->
+    <div id="screen-question" class="hidden">
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-count"><span id="qIndex">1</span> / 40</div>
+      </div>
+      <div class="tag" id="qChapter">الفصل</div>
+      <div class="qtext" id="qText">السؤال</div>
+      <div class="options" id="qOptions"></div>
+      <div class="explain" id="qExplain"></div>
+      <div class="nextrow" id="nextRow">
+        <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">السؤال التالي ←</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="screen-result" class="hidden">
+      <div class="ring-wrap">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <defs>
+            <linearGradient id="gradGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#c9a227"/>
+              <stop offset="100%" stop-color="#e8d28a"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="90" cy="90" r="78"></circle>
+          <circle class="ring-fg" id="ringFg" cx="90" cy="90" r="78" stroke-dasharray="490" stroke-dashoffset="490"></circle>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-score" id="ringScore">0%</div>
+          <div class="ring-total" id="ringTotal">0 من 20</div>
+        </div>
+      </div>
+
+      <div id="levelBadge" class="level-badge">النتيجة</div>
+      <h2 id="resultTitle">عنوان النتيجة</h2>
+      <p class="msg" id="resultMsg">رسالة النتيجة</p>
+
+      <div class="stat-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+        <div class="stat-box ok"><div class="n" id="correctCount">0</div><div class="l">إجابات صحيحة</div></div>
+        <div class="stat-box no"><div class="n" id="wrongCount">0</div><div class="l">إجابات خاطئة</div></div>
+        <div class="stat-box" style="background:rgba(201,162,39,.08); border-color:rgba(201,162,39,.3);"><div class="n" id="pointsScore" style="color:var(--gold-light);">0</div><div class="l">الدرجة من 100</div></div>
+      </div>
+
+      <div class="chapter-breakdown">
+        <h3>الأداء حسب الفصل</h3>
+        <div id="chapterList"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="restartQuiz()">إعادة المحاولة</button>
+        <button class="btn btn-ghost" onclick="reviewAnswers()">مراجعة إجاباتي</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-note">إعداد: نجوى المطيري &middot; محاكاة تدريبية غير رسمية للمراجعة الذاتية</div>
+</div>
+
+<script>
+const questions = [
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "الدالة ()zeros في NumPy تُستخدم لإنشاء مصفوفة من القيم العشوائية.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: الدالة ()zeros تُنشئ مصفوفة يكون كل عنصر فيها صفرًا، وليست قيمًا عشوائية (تلك وظيفة ()random)."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "مكتبة Matplotlib لا تسمح بعرض أكثر من رسم بياني في الشكل الواحد.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: تسمح Matplotlib بعرض أكثر من رسم بياني ضمن نفس الشكل (Figure) باستخدام subplots."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "الدالة ()describe في Pandas تُستخدم لعرض أول خمس صفوف من البيانات.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: ()describe تعرض ملخصًا إحصائيًا للأعمدة الرقمية، بينما الدالة التي تعرض أول خمس صفوف هي ()head."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "مكتبة Pandas تُستخدم فقط في التطبيع وليس في التنظيف.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: Pandas تُستخدم على نطاق واسع في تنظيف البيانات ومعالجتها وتحليلها، وليس في التطبيع فقط."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "لإنشاء مصفوفة من الأصفار في NumPy نستخدم:",
+    "options": [
+      "()zeros",
+      "()ones",
+      "()arange",
+      "()array"
+    ],
+    "correct": 0,
+    "explain": "الدالة ()zeros في مكتبة NumPy تُنشئ مصفوفة يكون كل عنصر فيها صفرًا، بينما ()ones تنشئ مصفوفة من الآحاد."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "لاستدعاء مكتبة NumPy في بايثون نستخدم الأمر:",
+    "options": [
+      "import numpy as np",
+      "import NumPy",
+      "load NumPy",
+      "install NumPy"
+    ],
+    "correct": 0,
+    "explain": "الصيغة القياسية لاستدعاء مكتبة NumPy في بايثون هي import numpy as np، حيث يشير np إلى الاسم المختصر المستخدم لاحقًا."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "الوحدة المستخدمة في Matplotlib للرسم هي:",
+    "options": [
+      "pyplot",
+      "visual",
+      "drawer",
+      "plotter"
+    ],
+    "correct": 0,
+    "explain": "الوحدة الأساسية المستخدمة في مكتبة Matplotlib للرسم البياني هي pyplot، وتُستدعى عادة بالصيغة import matplotlib.pyplot as plt."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "لقراءة ملف CSV في بايثون نستخدم:",
+    "options": [
+      "()pd.read_csv",
+      "()pd.load_file",
+      "()pd.csv_file",
+      "()pd.import"
+    ],
+    "correct": 0,
+    "explain": "تُستخدم الدالة ()pd.read_csv من مكتبة Pandas لقراءة ملفات CSV واستيرادها إلى بايثون على هيئة إطار بيانات (DataFrame)."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "الدالة التي تعرض معلومات الأعمدة وأنواعها في Pandas هي:",
+    "options": [
+      "()info",
+      "()columns",
+      "()shape",
+      "()describe"
+    ],
+    "correct": 0,
+    "explain": "الدالة ()info تعرض معلومات عن أعمدة إطار البيانات وأنواعها وعدد القيم غير الفارغة في كل عمود."
+  },
+  {
+    "chapter": "أدوات علم البيانات",
+    "q": "لتحديد لون الرسم البياني في Matplotlib نضيف الوسيطة:",
+    "options": [
+      "'color='red",
+      "'line='red",
+      "'brush='red",
+      "'fill='red"
+    ],
+    "correct": 0,
+    "explain": "لتحديد لون الرسم البياني في Matplotlib، تُضاف الوسيطة color='red' (أو أي لون آخر) داخل دالة الرسم."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "مكتبة TensorFlow تُستخدم لبناء الشبكات العصبية في بايثون.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: TensorFlow من أشهر المكتبات المستخدمة في بايثون لبناء وتدريب الشبكات العصبية ونماذج التعلم العميق."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "Jupyter Notebook هو بيئة عمل تفاعلية لكتابة الأكواد وعرض النتائج مباشرة.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: Jupyter Notebook بيئة عمل تفاعلية تتيح كتابة الأكواد وتنفيذها وعرض النتائج (نصوص، رسوم بيانية) مباشرة في نفس الملف."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "مكتبة Pandas تُستخدم بشكل أساسي لتطوير تطبيقات الويب.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: Pandas تُستخدم بشكل أساسي لتحليل ومعالجة البيانات في بايثون، وليس لتطوير تطبيقات الويب."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "PyTorch طُوّرت بواسطة شركة Google.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: PyTorch طُوّرت بواسطة شركة Meta (Facebook)، أما TensorFlow فهي التي طوّرتها شركة Google."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "يمكن تشغيل TensorFlow على CPU وGPU وTPU.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: من مميزات TensorFlow مرونته العالية، إذ يمكن تشغيله على وحدات معالجة مختلفة: CPU وGPU وTPU."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "TensorFlow مناسب فقط لتطبيقات سطح المكتب ولا يدعم الهواتف.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: يدعم TensorFlow منصات متعددة تشمل سطح المكتب والهواتف (عبر TensorFlow Lite) والمتصفحات (عبر TensorFlow.js)."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "Keras هي API عالية المستوى مبنية فوق TensorFlow.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: Keras واجهة برمجة تطبيقات (API) عالية المستوى مبنية فوق TensorFlow، وتتميز بسهولة استخدامها للمبتدئين."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "تُعد GPU عنصرًا مهمًا لتسريع تدريب نماذج التعلم العميق.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: تُعد وحدة معالجة الرسومات (GPU) عنصرًا مهمًا جدًا لتسريع عمليات التدريب المكثفة حسابيًا في نماذج التعلم العميق."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "لغة البرمجة الأكثر استخدامًا في التعلم العميق هي Java.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: لغة بايثون هي الأكثر استخدامًا في التعلم العميق نظرًا لسهولتها ووفرة مكتباتها المتخصصة مثل TensorFlow وPyTorch وKeras."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "ما المقصود ببيئة التعلم العميق؟",
+    "options": [
+      "مجموعة أدوات ومكتبات لبناء وتدريب النماذج",
+      "نظام تشغيل خاص",
+      "لغة برمجة",
+      "نوع من المعالجات"
+    ],
+    "correct": 0,
+    "explain": "بيئة التعلم العميق هي مجموعة من الأدوات والمكتبات البرمجية التي تُستخدم لبناء نماذج الشبكات العصبية وتدريبها واختبارها."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "أي لغة برمجة تُستخدم غالبًا في التعلم العميق؟",
+    "options": [
+      "Python",
+      "Java",
+      "C++",
+      "PHP"
+    ],
+    "correct": 0,
+    "explain": "تُعد بايثون اللغة الأكثر استخدامًا في مجال التعلم العميق، نظرًا لسهولتها ودعمها القوي من مكتبات مثل TensorFlow وKeras وPyTorch."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "أي مما يلي يُعد من مكتبات التعلم العميق؟",
+    "options": [
+      "TensorFlow",
+      "NumPy",
+      "Pandas",
+      "Excel"
+    ],
+    "correct": 0,
+    "explain": "TensorFlow من أشهر مكتبات التعلم العميق المتخصصة في بناء وتدريب الشبكات العصبية، بينما NumPy وPandas أدوات عامة لمعالجة البيانات."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "أي إطار عمل يتميز بالمرونة وسهولة تصحيح الأخطاء (Debugging)؟",
+    "options": [
+      "PyTorch",
+      "TensorFlow",
+      "Keras",
+      "Scikit-learn"
+    ],
+    "correct": 0,
+    "explain": "يشتهر إطار PyTorch بمرونته العالية وسهولة تصحيح الأخطاء، إذ يسمح بالتنفيذ الديناميكي للعمليات الحسابية (Dynamic Computation Graph)."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "ما الجهة التي طوّرت TensorFlow؟",
+    "options": [
+      "Google",
+      "Facebook",
+      "OpenAI",
+      "Microsoft"
+    ],
+    "correct": 0,
+    "explain": "طوّرت شركة Google مكتبة TensorFlow، وهي من أشهر أطر العمل مفتوحة المصدر المستخدمة في التعلم العميق."
+  },
+  {
+    "chapter": "أطر عمل التعلم العميق",
+    "q": "لماذا يُعد Keras مناسبًا للمبتدئين؟",
+    "options": [
+      "لأنه API عالي المستوى وسهل الاستخدام",
+      "لأنه منخفض المستوى",
+      "لأنه لا يحتاج لغة برمجة",
+      "لأنه يعمل بدون TensorFlow"
+    ],
+    "correct": 0,
+    "explain": "يُعد Keras مناسبًا للمبتدئين لأنه واجهة برمجة تطبيقات (API) عالية المستوى وسهلة الاستخدام، تبسّط عملية بناء النماذج مقارنة بالتعامل المباشر مع TensorFlow."
+  },
+  {
+    "chapter": "مكتبة OpenCV",
+    "q": "تُعد الرؤية الحاسوبية امتدادًا عمليًا لاستخدام مكتبة:",
+    "options": [
+      "OpenCV",
+      "Pandas",
+      "TensorFlow",
+      "spaCy"
+    ],
+    "correct": 0,
+    "explain": "تُعد معالجة الصور والرؤية الحاسوبية امتدادًا عمليًا لاستخدام مكتبة OpenCV، وهي المكتبة الأساسية المستخدمة في هذا المجال."
+  },
+  {
+    "chapter": "مكتبة OpenCV",
+    "q": "تعتمد OpenCV على مكتبة NumPy في:",
+    "options": [
+      "تمثيل الصور على شكل مصفوفات عددية",
+      "إنشاء واجهات المستخدم",
+      "تخزين الملفات الصوتية",
+      "إدارة قواعد البيانات"
+    ],
+    "correct": 0,
+    "explain": "تعتمد OpenCV على مكتبة NumPy في تمثيل الصور على شكل مصفوفات عددية، حيث تُخزَّن كل صورة كمصفوفة يمثل كل عنصر فيها قيمة بكسل."
+  },
+  {
+    "chapter": "مكتبة OpenCV",
+    "q": "تعتمد مكتبة OpenCV على نظام الألوان:",
+    "options": [
+      "BGR بدلًا من RGB",
+      "RGB فقط",
+      "CMYK فقط",
+      "HSV فقط"
+    ],
+    "correct": 0,
+    "explain": "تعتمد مكتبة OpenCV على نظام الألوان BGR بدلًا من RGB الشائع في معظم البرامج الأخرى، مع إمكانية التحويل بين أنظمة الألوان المختلفة."
+  },
+  {
+    "chapter": "مكتبة OpenCV",
+    "q": "مرشحات الحواف (Edge Detection) في OpenCV تُستخدم لـ:",
+    "options": [
+      "اكتشاف حدود الكائنات داخل الصورة",
+      "زيادة حجم الكائنات",
+      "تقليل حجم الكائنات",
+      "تلوين الصورة"
+    ],
+    "correct": 0,
+    "explain": "تُستخدم مرشحات الحواف لاكتشاف حدود الكائنات داخل الصورة من خلال إبراز التغيرات الحادة في شدة الإضاءة."
+  },
+  {
+    "chapter": "مكتبة OpenCV",
+    "q": "عملية التآكل (Erosion) في العمليات الشكلية بمكتبة OpenCV تُستخدم لـ:",
+    "options": [
+      "تقليل حجم الكائنات داخل الصورة",
+      "زيادة حجم الكائنات داخل الصورة",
+      "ملء الفجوات داخل الكائنات",
+      "تلوين الكائنات"
+    ],
+    "correct": 0,
+    "explain": "تُستخدم عملية التآكل (Erosion) لتقليل حجم الكائنات داخل الصورة عن طريق إزالة البكسلات من حدودها، وهي مفيدة لإزالة الضوضاء الصغيرة."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "أي نظام يُستخدم لربط مكونات الروبوت برمجيًا؟",
+    "options": [
+      "ROS",
+      "Linux",
+      "Arduino IDE",
+      "Python"
+    ],
+    "correct": 0,
+    "explain": "نظام ROS (Robot Operating System) هو المستخدم لربط المكونات البرمجية المختلفة للروبوت ببعضها البعض، وتنظيم التواصل بينها."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "أي بيئة تطوير تُستخدم غالبًا مع Arduino؟",
+    "options": [
+      "Arduino IDE",
+      "PyCharm",
+      "Spyder",
+      "MATLAB"
+    ],
+    "correct": 0,
+    "explain": "بيئة Arduino IDE هي بيئة التطوير الرسمية والأكثر استخدامًا لكتابة وتحميل الأكواد إلى لوحات Arduino."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "Raspberry Pi يعمل بنظام Linux.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: يعمل Raspberry Pi عادة بأنظمة تشغيل مبنية على Linux مثل Raspberry Pi OS، وهو حاسوب صغير كامل المواصفات."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "Arduino يعمل بدون نظام تشغيل.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: لوحات Arduino لا تحتوي على نظام تشغيل، بل تُنفذ الكود المرفوع إليها مباشرة (Bare-metal)، بخلاف Raspberry Pi الذي يشغل نظام Linux كامل."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "يحتوي Raspberry Pi على مداخل Analog حقيقية.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: لا يحتوي Raspberry Pi على مداخل تناظرية (Analog) حقيقية بشكل مدمج، ويحتاج إلى محول ADC خارجي لقراءة الإشارات التناظرية، بخلاف Arduino."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "يُستخدم PWM للتحكم في شدة الإضاءة أو سرعة المحركات.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: تُستخدم تقنية تضمين عرض النبضة (PWM) للتحكم في شدة الإضاءة أو سرعة دوران المحركات من خلال التحكم في نسبة زمن التشغيل إلى الإيقاف."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "يمكن تشغيل المحركات مباشرة من منافذ GPIO في Raspberry Pi.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: لا يمكن تشغيل المحركات مباشرة من منافذ GPIO لأنها لا توفر تيارًا كافيًا، بل يجب استخدام دائرة تشغيل محركات (Motor Driver) لحمايتها."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "H-Bridge تُستخدم لتغيير اتجاه دوران محركات DC.",
+    "options": [
+      "صح",
+      "خطأ"
+    ],
+    "correct": 0,
+    "explain": "عبارة صحيحة: تُستخدم دائرة الجسر H (H-Bridge) للتحكم في اتجاه دوران محركات التيار المستمر (DC) عبر عكس اتجاه التيار المار بها."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "ROS هو نظام تشغيل خاص بالحواسيب الشخصية فقط.",
+    "options": [
+      "خطأ",
+      "صح"
+    ],
+    "correct": 0,
+    "explain": "عبارة خاطئة: ROS (Robot Operating System) ليس نظام تشغيل عام للحواسيب الشخصية، بل هو إطار عمل برمجي متخصص لربط وتنظيم مكونات أنظمة الروبوتات."
+  },
+  {
+    "chapter": "برمجيات الروبوتات",
+    "q": "اي عنصر يُستخدم لحماية المتحكم من التيار العالي للمحرك؟",
+    "options": [
+      "Motor Driver",
+      "GPIO",
+      "Sensor",
+      "ADC"
+    ],
+    "correct": 0,
+    "explain": "يُستخدم دائرة تشغيل المحركات (Motor Driver) لحماية المتحكم (مثل Arduino أو Raspberry Pi) من التيار العالي الذي تتطلبه المحركات."
+  }
+];
+
+const letters = ["أ","ب","ج","د"];
+let current = 0;
+let answers = []; // {selected, correct, isCorrect}
+let locked = false;
+let workingQuestions = [];
+
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildShuffledQuestions(){
+  return questions.map(q => {
+    const indexed = q.options.map((opt, i) => ({opt, i}));
+    const shuffled = shuffleArray(indexed);
+    const newCorrect = shuffled.findIndex(o => o.i === q.correct);
+    return {
+      chapter: q.chapter,
+      q: q.q,
+      explain: q.explain,
+      options: shuffled.map(o => o.opt),
+      correct: newCorrect
+    };
+  });
+}
+
+function startQuiz(){
+  document.getElementById('screen-intro').classList.add('hidden');
+  document.getElementById('screen-question').classList.remove('hidden');
+  current = 0;
+  answers = [];
+  workingQuestions = buildShuffledQuestions();
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const item = workingQuestions[current];
+  document.getElementById('qIndex').textContent = current+1;
+  document.getElementById('progressFill').style.width = ((current)/workingQuestions.length*100)+'%';
+  document.getElementById('qChapter').textContent = item.chapter;
+  document.getElementById('qText').textContent = item.q;
+  document.getElementById('qExplain').classList.remove('show');
+  document.getElementById('qExplain').innerHTML = '';
+  document.getElementById('nextRow').classList.remove('show');
+
+  const optsWrap = document.getElementById('qOptions');
+  optsWrap.innerHTML = '';
+  item.options.forEach((opt, idx) => {
+    const div = document.createElement('button');
+    div.className = 'option';
+    div.innerHTML = `<span class="letter">${letters[idx]}</span><span>${opt}</span>`;
+    div.onclick = () => selectOption(idx);
+    optsWrap.appendChild(div);
+  });
+
+  document.getElementById('nextBtn').textContent = (current === workingQuestions.length-1) ? 'عرض النتيجة ←' : 'السؤال التالي ←';
+}
+
+function selectOption(idx){
+  if(locked) return;
+  locked = true;
+  const item = workingQuestions[current];
+  const isCorrect = idx === item.correct;
+  answers.push({selected: idx, correct: item.correct, isCorrect, chapter: item.chapter});
+
+  const opts = document.querySelectorAll('#qOptions .option');
+
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if(i === item.correct) el.classList.add('correct');
+    if(i === idx && idx !== item.correct) el.classList.add('incorrect');
+    if(i !== idx && i !== item.correct) el.classList.add('dim');
+  });
+
+  const explainEl = document.getElementById('qExplain');
+  explainEl.innerHTML = `<b>${isCorrect ? 'إجابة صحيحة ✓' : 'إجابة غير صحيحة ✗'}</b> — ${item.explain}`;
+  explainEl.classList.add('show');
+
+  document.getElementById('nextRow').classList.add('show');
+}
+
+function nextQuestion(){
+  if(current < workingQuestions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult(){
+  document.getElementById('screen-question').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+
+  const correctCount = answers.filter(a => a.isCorrect).length;
+  const wrongCount = answers.length - correctCount;
+  const pct = Math.round((correctCount/workingQuestions.length)*100);
+
+  // ring animation
+  const circumference = 2 * Math.PI * 78;
+  const ringFg = document.getElementById('ringFg');
+  ringFg.setAttribute('stroke-dasharray', circumference);
+  ringFg.style.strokeDashoffset = circumference;
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      ringFg.style.strokeDashoffset = circumference - (pct/100)*circumference;
+    }, 100);
+  });
+
+  document.getElementById('ringScore').textContent = pct + '%';
+  document.getElementById('ringTotal').textContent = correctCount + ' من ' + workingQuestions.length;
+  document.getElementById('correctCount').textContent = correctCount;
+  document.getElementById('wrongCount').textContent = wrongCount;
+  document.getElementById('pointsScore').textContent = (correctCount * 2.5).toLocaleString('ar') + ' / 100';
+
+  const badge = document.getElementById('levelBadge');
+  const title = document.getElementById('resultTitle');
+  const msg = document.getElementById('resultMsg');
+
+  badge.className = 'level-badge';
+  if(pct >= 90){
+    badge.classList.add('level-excellent');
+    badge.textContent = 'ممتاز';
+    title.textContent = 'جاهزة تمامًا للاختبار الشامل 🎉';
+    msg.textContent = 'مستوى إتقانك للمقررات ممتاز. راجعي الأسئلة القليلة التي أخطأتِ فيها إن وجدت، وأنتِ جاهزة للتقديم بثقة.';
+  } else if(pct >= 75){
+    badge.classList.add('level-good');
+    badge.textContent = 'جيد جدًا';
+    title.textContent = 'أداء قوي، وتحتاجين مراجعة بسيطة';
+    msg.textContent = 'مستواك جيد جدًا. راجعي شرح الأسئلة التي أخطأتِ فيها لسد الفجوات البسيطة قبل الاختبار.';
+  } else if(pct >= 60){
+    badge.classList.add('level-fair');
+    badge.textContent = 'مقبول';
+    title.textContent = 'بداية جيدة، تحتاجين مراجعة أعمق';
+    msg.textContent = 'أساسك مقبول لكن هناك فجوات تحتاج تركيز أكبر. راجعي الفصول التي تكررت فيها الأخطاء أدناه.';
+  } else {
+    badge.classList.add('level-weak');
+    badge.textContent = 'يُنصح بالمراجعة';
+    title.textContent = 'ابدئي بمراجعة شاملة للملخص';
+    msg.textContent = 'ننصحك بمراجعة ملخص المقررات كاملًا مرة أخرى ثم إعادة المحاولة قبل التقديم على الاختبار الفعلي.';
+  }
+
+  // chapter breakdown
+  const chapterMap = {};
+  answers.forEach(a => {
+    if(!chapterMap[a.chapter]) chapterMap[a.chapter] = {correct:0, total:0};
+    chapterMap[a.chapter].total++;
+    if(a.isCorrect) chapterMap[a.chapter].correct++;
+  });
+
+  const listEl = document.getElementById('chapterList');
+  listEl.innerHTML = '';
+  Object.keys(chapterMap).forEach(ch => {
+    const d = chapterMap[ch];
+    const p = Math.round((d.correct/d.total)*100);
+    const row = document.createElement('div');
+    row.className = 'ch-row';
+    row.innerHTML = `
+      <span class="ch-name">${ch}</span>
+      <span class="ch-bar-track"><span class="ch-bar-fill" style="width:${p}%"></span></span>
+      <span class="ch-frac">${d.correct}/${d.total}</span>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
+function restartQuiz(){
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-intro').classList.remove('hidden');
+}
+
+function reviewAnswers(){
+  // scroll to chapter breakdown as a lightweight review anchor
+  let reviewHtml = '<div style="text-align:right; margin-top:10px;">';
+  workingQuestions.forEach((item, i) => {
+    const a = answers[i];
+    reviewHtml += `<div style="margin-bottom:14px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08);">
+      <div style="font-weight:800; color:#fff; margin-bottom:6px; font-size:14.5px;">${i+1}. ${item.q}</div>
+      <div style="font-size:13px; color:${a.isCorrect?'#5fd8a6':'#e88b96'}; font-weight:700; margin-bottom:4px;">
+        إجابتك: ${letters[a.selected]}) ${item.options[a.selected]} ${a.isCorrect ? '✓' : '✗'}
+      </div>
+      ${!a.isCorrect ? `<div style="font-size:13px; color:#5fd8a6; font-weight:700; margin-bottom:4px;">الصحيحة: ${letters[item.correct]}) ${item.options[item.correct]}</div>` : ''}
+      <div style="font-size:13px; color:var(--muted); line-height:1.8;">${item.explain}</div>
+    </div>`;
+  });
+  reviewHtml += '</div>';
+
+  const resultCard = document.getElementById('screen-result');
+  let reviewSection = document.getElementById('reviewSection');
+  if(reviewSection){
+    reviewSection.classList.toggle('hidden');
+  } else {
+    reviewSection = document.createElement('div');
+    reviewSection.id = 'reviewSection';
+    reviewSection.innerHTML = '<h3 style="text-align:right; color:var(--gold-light); font-size:15px; margin:24px 0 4px;">مراجعة الأسئلة</h3>' + reviewHtml;
+    resultCard.appendChild(reviewSection);
+  }
+}
+</script>
+</body>
+</html>
